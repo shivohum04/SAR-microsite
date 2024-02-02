@@ -1,7 +1,6 @@
 import express, { request, response } from "express";
 import { PORT,mongoDBURL} from "./config.js";
 import mongoose from "mongoose";
-import { user } from './models/user_model.js';
 import user_routes from './routes/user_routes.js';
 
 const app = express();
@@ -14,7 +13,7 @@ app.get('/',(request,response)=>{
 app.use(express.json());
 
 // middleware to handle CORS policy 
-app.use(cors());
+// app.use(cors());
 app.get('/',(request,response)=>{
     console.log(request);
     return response.status(234).send("welcome to the microsite ");

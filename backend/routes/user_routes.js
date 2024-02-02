@@ -1,7 +1,26 @@
 import express from 'express';
 import { user } from '../models/user_model.js';
 const router = express.Router();
+// Dynamic search endpoint
+router.get('/search', async (request, response) => {
+    try {
+        const searchQuery = request.query.query; // Get the search term from query parameters
 
+        // Perform a case-insensitive search on multiple fields
+        const searchResults = await user.find({
+            $or: [
+                { name: { $regex: searchQuery, $options: 'i' } },
+                { city: { $regex: searchQuery, $options: 'i' } },
+                // Add other fields you want to include in the search
+            ],
+        });
+
+        response.status(200).json(searchResults);
+    } catch (error) {
+        console.error(error);
+        response.status(500).send({ message: error.message });
+    }
+});
 // to save new data to the database
 router.post('/', async (request,response)=>{
     try{
@@ -49,7 +68,7 @@ router.get('/', async (request, response)=>{
 router.get('/:id', async(request,response)=>{
     try{
         const {id} = request.params;
-        const user= await user.findById(id);
+        const userData= await user.findById(id);
 
         return response.status(200).json({
             count: users.length,
